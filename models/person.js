@@ -4,17 +4,17 @@ mongoose.set('strictQuery',false)
 
 const url = process.env.MONGODB_URI
 
-console.log("connecting to", url)
+console.log('connecting to', url)
 
 mongoose.connect(url)
-    .then(result=>{
+    .then(result => {
         console.log('connected to MONGODB')
     })
-    .catch(error=>{
+    .catch(error => {
         console.log('error connecting to MONGODB',error.message)
     })
 
-const isValidPhoneNumber = (value) =>{
+const isValidPhoneNumber = (value) => {
     const phoneNumberPattern = /^\d{2,3}-\d+$/
     return phoneNumberPattern.test(value)
 }
@@ -36,7 +36,7 @@ const personSchema = new mongoose.Schema({
 })
 
 personSchema.set('toJSON',{
-    transform:(document,requestedObj)=>{
+    transform:(document,requestedObj) => {
         requestedObj.id = requestedObj._id
         delete requestedObj._id
         delete requestedObj.__v

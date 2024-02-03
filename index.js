@@ -10,26 +10,25 @@ app.use(express.static('dist'))
 
 
 
-app.get('/api/persons',(request,response)=>{
-    Person.find({}).then(persons=>{
-         response.json(persons)
+app.get('/api/persons',(request,response) => {
+    Person.find({}).then(persons => {
+        response.json(persons)
     })
 })
 
-app.get('/info',(request,response)=>{
+app.get('/info',(request,response) => {
     Person.find({})
-        .then(persons=>response.send(`<p>
+        .then(persons =>  response.send(`<p>
         Phonebook has info for ${persons.length} people
         <br/>
         ${new Date()}
     </p>`))
-    
 })
 
 
-app.get('/api/persons/:id',(request,response,next)=>{
+app.get('/api/persons/:id',(request,response,next) => {
     Person.findById(request.params.id)
-        .then(person=>{
+        .then(person => {
             if(person){
                 response.json(person)
             }
@@ -37,20 +36,20 @@ app.get('/api/persons/:id',(request,response,next)=>{
                 response.status(404).end()
             }
         })
-        .catch(error=>next(error))
+        .catch(error => next(error))
 })
 
 
-app.delete('/api/persons/:id',(request,response,next)=>{
+app.delete('/api/persons/:id',(request,response,next) => {
     Person.findByIdAndDelete(request.params.id)
-        .then(result=>{
+        .then(result => {
             response.json(result)
         })
-        .catch(error=>next(error))
+        .catch(error => next(error))
 })
 
 
-app.post('/api/persons',(request,response,next)=>{
+app.post('/api/persons',(request,response,next) => {
     const body = request.body
 
     const person = new Person({
@@ -59,37 +58,36 @@ app.post('/api/persons',(request,response,next)=>{
     })
 
     person.save()
-        .then(newPerson=>{
+        .then(newPerson => {
             response.json(newPerson)
         })
-        .catch(error=>next(error))
-    
+        .catch(error => next(error))
 })
 
 
-app.put('/api/persons/:id',(request,response,next)=>{
-    const {name,number} = request.body
+app.put('/api/persons/:id',(request,response,next) => {
+    const { name,number } = request.body
 
     Person.findByIdAndUpdate(
         request.params.id,
-        {name,number},
-        {new:true,runValidators:true,context:'query'})
-        .then(updatePerson=>{
+        { name,number },
+        { new:true,runValidators:true,context:'query' })
+        .then(updatePerson => {
             response.json(updatePerson)
         })
-        .catch(error=>next(error))
+        .catch(error => next(error))
 })
 
 
-const errorHandler = (error,request,response,next)=>{
+const errorHandler = (error,request,response,next) => {
     console.log(error.message)
 
-    if(error.name==="CastError"){
-        response.status(400).json({error:"malformed id"})
+    if(error.name==='CastError'){
+        response.status(400).json({ error:'malformed id' })
     }
 
-    else if(error.name==="ValidationError"){
-        response.status(400).json({error:error.message})
+    else if(error.name==='ValidationError'){
+        response.status(400).json({ error:error.message })
     }
     next(error)
 }
